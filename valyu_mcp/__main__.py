@@ -15,7 +15,7 @@ def main() -> None:
     )
 
     host = os.getenv("FASTMCP_HOST", "0.0.0.0")
-    port = int(os.getenv("FASTMCP_PORT", "8000"))
+    port = int(os.getenv("FASTMCP_PORT", "8012"))
     mcp.run(transport="http", host=host, port=port)
 
 

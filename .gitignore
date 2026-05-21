@@ -30,6 +30,9 @@ Thumbs.db
 .mypy_cache/
 .pyright/
 
+# Docker
+*.tar.gz
+
 # Trellis runtime (session state, developer identity)
 .trellis/.runtime/
 .trellis/.developer

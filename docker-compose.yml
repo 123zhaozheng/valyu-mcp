@@ -1,0 +1,17 @@
+services:
+  valyu-mcp:
+    build: .
+    container_name: valyu-mcp
+    ports:
+      - "8012:8012"
+    env_file:
+      - .env
+    environment:
+      - FASTMCP_HOST=0.0.0.0
+      - FASTMCP_PORT=8012
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

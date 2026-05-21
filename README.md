@@ -41,7 +41,7 @@ uv sync
 | `KEY_RETRY_INTERVAL_SECONDS` | No | `300` | Seconds between offline-key retry attempts |
 | `REQUEST_TIMEOUT_SECONDS` | No | `120` | HTTP timeout for Valyu API calls |
 | `FASTMCP_HOST` | No | `0.0.0.0` | MCP HTTP server host |
-| `FASTMCP_PORT` | No | `8000` | MCP HTTP server port |
+| `FASTMCP_PORT` | No | `8012` | MCP HTTP server port |
 | `LOG_LEVEL` | No | `INFO` | Python logging level |
 
 ## Running the Server
@@ -53,13 +53,13 @@ export VALYU_API_KEYS="key1,key2,key3"
 uv run python -m valyu_mcp
 ```
 
-The MCP endpoint will be available at `http://localhost:8000/mcp/` and the health check at `http://localhost:8000/health`.
+The MCP endpoint will be available at `http://localhost:8012/mcp/` and the health check at `http://localhost:8012/health`.
 
 ### With uvicorn (production / ASGI)
 
 ```bash
 export FASTMCP_STATELESS_HTTP=true
-uv run uvicorn "valyu_mcp.server:mcp.http_app(path='/mcp')" --host 0.0.0.0 --port 8000
+uv run uvicorn "valyu_mcp.server:mcp.http_app(path='/mcp')" --host 0.0.0.0 --port 8012
 ```
 
 > Set `FASTMCP_STATELESS_HTTP=true` for multi-worker deployments so that sessions are not stored server-side.
