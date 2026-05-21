@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "Backend spec entry point for compliance check"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "Verify error handling consistency in key rotation and quota detection"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "Code quality verification standards"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/prd.md", "reason": "Verify implementation matches requirements and acceptance criteria"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/research/valyu-api.md", "reason": "Verify API endpoint coverage and error handling matches Valyu docs"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/research/fastmcp-http.md", "reason": "Verify fastmcp HTTP transport and tool registration patterns are correct"}

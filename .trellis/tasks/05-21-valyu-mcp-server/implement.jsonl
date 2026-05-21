@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "Backend spec entry point — coding standards for Python backend code"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "Error handling patterns — critical for quota exhaustion detection and key offline logic"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "Code quality standards for the MCP server implementation"}
+{"file": ".trellis/spec/backend/directory-structure.md", "reason": "Backend directory layout conventions"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Cross-layer thinking guide for design decisions"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/prd.md", "reason": "Task requirements and acceptance criteria"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/research/valyu-api.md", "reason": "Valyu API endpoint schemas, auth, and error format research"}
+{"file": ".trellis/tasks/05-21-valyu-mcp-server/research/fastmcp-http.md", "reason": "fastmcp HTTP transport setup, tool registration, and ASGI patterns"}
