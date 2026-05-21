@@ -2,6 +2,7 @@
 
 import asyncio
 import contextlib
+import json
 import logging
 from typing import Any
 
@@ -140,6 +141,33 @@ class ValyuClient:
                         state.key[:8],
                     )
 
+    def _parse_sse(self, text: str) -> dict[str, Any]:
+        """Parse Server-Sent Events (SSE) response into merged JSON.
+
+        Valyu's /answer endpoint returns text/event-stream with multiple
+        data: lines. We extract all JSON payloads and merge them.
+        Lines containing [DONE] or unparseable text are skipped.
+        """
+        merged: dict[str, Any] = {}
+        for line in text.splitlines():
+            line = line.strip()
+            if not line.startswith("data:"):
+                continue
+            payload = line[5:].strip()
+            if payload == "[DONE]":
+                continue
+            try:
+                obj = json.loads(payload)
+                if isinstance(obj, dict):
+                    merged.update(obj)
+            except json.JSONDecodeError:
+                continue
+        if not merged:
+            return {"_raw_sse": text}
+        # Remove transient SSE framing indicator if present.
+        merged.pop("_sse_parsed", None)
+        return merged
+
     async def _probe_key(self, key: str) -> bool:
         """Send a lightweight request to verify a key is usable again."""
         if self._http is None:
@@ -215,10 +243,14 @@ class ValyuClient:
                 raise RuntimeError(f"Valyu API request failed: {exc}") from exc
 
             body: dict[str, Any] = {}
-            try:
-                body = resp.json()
-            except Exception:
-                body = {"_raw": resp.text}
+            content_type = resp.headers.get("content-type", "").lower()
+            if "text/event-stream" in content_type:
+                body = self._parse_sse(resp.text)
+            else:
+                try:
+                    body = resp.json()
+                except Exception:
+                    body = {"_raw": resp.text}
 
             if _is_quota_error(resp.status_code, body):
                 logger.warning(

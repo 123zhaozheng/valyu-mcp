@@ -24,11 +24,13 @@ A custom [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server
 - Python 3.11+
 - `fastmcp`, `httpx`, `pydantic`, `pydantic-settings`
 
-## Installation
+## Installation (uv)
 
 ```bash
-pip install -e ".[dev]"
+uv sync
 ```
+
+> Uses `uv` for dependency management. `default-groups = ["dev"]` in `pyproject.toml` auto-installs dev deps.
 
 ## Environment Variables
 
@@ -48,7 +50,7 @@ pip install -e ".[dev]"
 
 ```bash
 export VALYU_API_KEYS="key1,key2,key3"
-python -m valyu_mcp
+uv run python -m valyu_mcp
 ```
 
 The MCP endpoint will be available at `http://localhost:8000/mcp/` and the health check at `http://localhost:8000/health`.
@@ -57,7 +59,7 @@ The MCP endpoint will be available at `http://localhost:8000/mcp/` and the healt
 
 ```bash
 export FASTMCP_STATELESS_HTTP=true
-uvicorn "valyu_mcp.server:mcp.http_app(path='/mcp')" --host 0.0.0.0 --port 8000
+uv run uvicorn "valyu_mcp.server:mcp.http_app(path='/mcp')" --host 0.0.0.0 --port 8000
 ```
 
 > Set `FASTMCP_STATELESS_HTTP=true` for multi-worker deployments so that sessions are not stored server-side.
@@ -65,15 +67,15 @@ uvicorn "valyu_mcp.server:mcp.http_app(path='/mcp')" --host 0.0.0.0 --port 8000
 ## Testing
 
 ```bash
-pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 ## Lint & Type Check
 
 ```bash
-ruff check .
-ruff format .
-pyright
+uv run ruff check valyu_mcp tests
+uv run ruff format valyu_mcp tests
+uv run pyright
 ```
 
 ## Architecture
