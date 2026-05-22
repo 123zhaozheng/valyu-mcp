@@ -28,21 +28,20 @@ def _truncate_result_items(result: dict[str, Any]) -> dict[str, Any]:
     items = result.get("results")
     if not isinstance(items, list):
         return result
-    # Keep only the top-N results to avoid context explosion.
+    # Keep only the top-5 results to avoid context explosion.
     # Valyu sorts by relevance, so the first few are the most useful.
-    kept, dropped = items[:8], items[8:]
+    kept, dropped = items[:5], items[5:]
     if dropped:
         result["results"] = kept
         result["_truncated"] = {"dropped_results": len(dropped)}
     for item in kept:
         if not isinstance(item, dict):
             continue
-        # Aggressively truncate raw source text; titles/urls are tiny, keep them.
-        item["content"] = _truncate_text(item.get("content"), max_chars=400)
-        item["description"] = _truncate_text(item.get("description"), max_chars=200)
-        item["abstract"] = _truncate_text(item.get("abstract"), max_chars=400)
-        item["summary"] = _truncate_text(item.get("summary"), max_chars=400)
-        item["references"] = _truncate_text(item.get("references"), max_chars=200)
+        item["content"] = _truncate_text(item.get("content"), max_chars=2000)
+        item["description"] = _truncate_text(item.get("description"), max_chars=500)
+        item["abstract"] = _truncate_text(item.get("abstract"), max_chars=2000)
+        item["summary"] = _truncate_text(item.get("summary"), max_chars=2000)
+        item["references"] = _truncate_text(item.get("references"), max_chars=500)
     return result
 
 
@@ -61,8 +60,8 @@ def _truncate_answer_response(result: dict[str, Any]) -> dict[str, Any]:
             result.setdefault("_truncated", {})["dropped_citations"] = len(dropped)
         for cite in kept:
             if isinstance(cite, dict):
-                cite["content"] = _truncate_text(cite.get("content"), max_chars=400)
-                cite["description"] = _truncate_text(cite.get("description"), max_chars=200)
+                cite["content"] = _truncate_text(cite.get("content"), max_chars=500)
+                cite["description"] = _truncate_text(cite.get("description"), max_chars=500)
     return result
 
 
@@ -292,7 +291,7 @@ async def valyu_contents(
             payload[key] = value
 
     result = await _get_client().request("POST", "/contents", json_body=payload)
-    return _truncate_result_items(result)
+    return result  # No truncation — user explicitly wants full extracted content
 
 
 @mcp.tool()
@@ -310,7 +309,7 @@ async def valyu_contents_status(job_id: str) -> dict[str, Any]:
         job_id: The job ID returned by valyu_contents.
     """
     result = await _get_client().request("GET", f"/contents/job/{job_id}")
-    return _truncate_result_items(result)
+    return result  # No truncation — user explicitly wants full extracted content
 
 
 # ---------------------------------------------------------------------------
